@@ -1,12 +1,25 @@
-FROM caddy:builder AS builder
+ARG CADDY_VERSION="2.3.0"
+
+FROM caddy:${CADDY_VERSION}-builder AS builder
 
 RUN xcaddy build --with github.com/caddy-dns/cloudflare
 
-FROM caddy:alpine
+FROM caddy:${CADDY_VERSION}
 
 RUN apk add --no-cache bash
 
-COPY run.sh /run.sh
+# set version for s6 overlay
+ARG OVERLAY_VERSION="v2.1.0.2"
+ARG OVERLAY_ARCH="amd64"
+
+# add s6 overlay
+ADD https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}-installer /tmp/
+RUN chmod +x /tmp/s6-overlay-${OVERLAY_ARCH}-installer && /tmp/s6-overlay-${OVERLAY_ARCH}-installer / && rm /tmp/s6-overlay-${OVERLAY_ARCH}-installer
+
+
+ENV CADDY_ARGS=""
+
+COPY root/ /
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
-CMD /run.sh
+ENTRYPOINT ["/init"]

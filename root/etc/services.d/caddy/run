@@ -1,0 +1,4 @@
+#!/usr/bin/execlineb -P
+
+with-contenv
+caddy run --config /etc/caddy/Caddyfile --adapter caddyfile "$CADDY_ARGS"
