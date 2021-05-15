@@ -1,4 +1,4 @@
-ARG CADDY_VERSION="2.3.0"
+ARG CADDY_VERSION="2.4.0"
 
 FROM caddy:${CADDY_VERSION}-builder AS builder
 
@@ -9,7 +9,7 @@ FROM caddy:${CADDY_VERSION}
 RUN apk add --no-cache bash
 
 # set version for s6 overlay
-ARG OVERLAY_VERSION="v2.1.0.2"
+ARG OVERLAY_VERSION="v2.2.0.3"
 ARG OVERLAY_ARCH="amd64"
 
 # add s6 overlay
